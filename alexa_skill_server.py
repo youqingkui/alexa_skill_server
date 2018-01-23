@@ -40,34 +40,38 @@ def timestamp_to_date(timestap, format_str='%Y-%m-%d %H:%M:%S'):
     date_str = time.strftime(format_str, x)
     return date_str
 
-def random_bayby_name(babay_str):
-    logging.debug("babay_str => %s" % babay_str)
-    list_babay = babay_str.split(',')
-    babay_name = choice(list_babay).strip()
-    return babay_name
+def random_choice_res(response):
+    logging.debug("babay_str => %s" % response)
+    lst_res = response.split(',')
+    choice_res = choice(lst_res).strip()
+    return choice_res
 
 
 redis_key_prefix = "baybay:record:milk"
+drink_milk_ml_prefix = "baybay:record:milk:ml"
 
 
 @ask.launch
 def new_game():
 
-    welcome_msg = render_template('start')
+    welcome_msg = render_template('welcome')
+    welcome_msg = random_choice_res(welcome_msg)
 
     return question(welcome_msg)
 
 
-@ask.intent("StartIntent")
-def start_recored():
-
+@ask.intent("BabyDrink", convert={'ml_number': int})
+def start_recored(ml_number):
+    if ml_number is None:
+        response = render_template('sorry')
+        return statement(response)
     redis_conn = get_redis_conn_pool()
     current_time = int(time.time())
     date_str = timestamp_to_date(current_time, format_str='%Y-%m-%d')
-    redis_key = "%s:%s" % (redis_key_prefix, date_str)
-    redis_conn.lpush(redis_key, current_time)
-    baby_name = random_bayby_name(render_template('bayby_name'))
-    response = render_template('recorded').format(baby_name=baby_name)
+    redis_key = "%s:%s" % (drink_milk_ml_prefix, date_str)
+    redis_conn.zadd(redis_key, ml_number, current_time)
+    baby_name = random_choice_res(render_template('bayby_name'))
+    response = render_template('recorded').format(baby_name=baby_name, ml_number=ml_number)
     return statement(response)
 
 
@@ -76,15 +80,16 @@ def ask_answer():
     redis_conn = get_redis_conn_pool()
     current_time = int(time.time())
     date_str = timestamp_to_date(current_time, format_str='%Y-%m-%d')
-    redis_key = "%s:%s" % (redis_key_prefix, date_str)
-    record_content = redis_conn.lrange(redis_key, 0, -1)
+    redis_key = "%s:%s" % (drink_milk_ml_prefix, date_str)
+    record_content = redis_conn.zrange(redis_key, 0, -1, withscores=True)
     if not redis_conn:
         response = "I did not find today's record, today's time is %s" % date_str
     else:
         total_record = len(record_content)
-        last_date = timestamp_to_date(record_content[-1], '%H:%M')
-        baby_name = random_bayby_name(render_template('bayby_name'))
-        response = "Find %s records, %s last record is %s" % (total_record, baby_name, last_date)
+        last_date = timestamp_to_date(record_content[-1][-1], '%H:%M')
+        drink_mi = record_content[-1][0]
+        baby_name = random_choice_res(render_template('bayby_name'))
+        response = "Find %s records, %s last record is %s %s ml" % (total_record, baby_name, last_date, drink_mi)
     return statement(response)
 
 

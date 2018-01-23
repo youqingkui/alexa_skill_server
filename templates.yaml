@@ -1,11 +1,4 @@
-welcome: Welcome to memory game. I'm going to say three numbers for you to repeat backwards. Ready?
-
-round: Can you repeat the numbers {{ numbers|join(", ") }} backwards?
-
-win: Good job!
-
-lose: Sorry, that's the wrong answer.
-
-start: Hello, Ready to start recording baby drinking time?
-recorded: OK, {baby_name} has been recorded drinking time
+welcome: Hello Ready to start recording baby drinking time? Please say Baby drink MI number.
+sorry: Sorry, I did not recognize the number you said!
+recorded: OK, has been recorded {baby_name} drinking {ml_number} milliliter
 bayby_name: xiao cheng zi, mama's baybay, Orange baby, huang yu le
