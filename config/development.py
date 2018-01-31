@@ -42,7 +42,7 @@ class DevelopmentConfig(Config):
     CACHE_TYPE = 'redis'
     CACHE_KEY_PREFIX = 'flask_cache_'
     CACHE_REDIS_HOST = '127.0.0.1'
-    CACHE_REDIS_PORT = '7403'
+    CACHE_REDIS_PORT = '6379'
     # CACHE_REDIS_PASSWORD = ''
     CACHE_REDIS_DB = '1'
 

@@ -17,6 +17,7 @@ PROJECT_DIR=`cd $(dirname "$0");pwd`
 cd ${PROJECT_DIR}
 
 config_file="${PROJECT_DIR}/config.ini"
+echo $config_file
 
 # if ./logs dir is not exist, mkdir ./logs
 [ ! -d "${PROJECT_DIR}/logs" ] && mkdir -p ${PROJECT_DIR}/logs

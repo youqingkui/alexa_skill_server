@@ -7,6 +7,7 @@
 
 
 import time
+import os
 import traceback
 from flask_ask import Ask, statement, question
 from flask import Blueprint, current_app as app, render_template
@@ -14,15 +15,13 @@ from application.utils.lib import get_redis_conn_pool
 from application.utils.help import timestamp_to_date, random_choice_res
 from config.const import DRINK_MILK_ML_PREFIX
 
-main = Blueprint('main', __name__)
+main = Blueprint('main', __name__, url_prefix="/")
 ask = Ask(blueprint=main)
 
 @ask.launch
 def new_game():
-
     welcome_msg = render_template('welcome')
     welcome_msg = random_choice_res(welcome_msg)
-
     return question(welcome_msg)
 
 
