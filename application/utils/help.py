@@ -17,3 +17,13 @@ def random_choice_res(response):
     lst_res = response.split(',')
     choice_res = random.choice(lst_res).strip()
     return choice_res
+
+def get_today_date(format_str='%Y-%m-%d %H:%M:%S'):
+    current_time = int(time.time())
+    date_str = timestamp_to_date(current_time, format_str=format_str)
+    return date_str
+
+def get_yesterday(format_str='%Y-%m-%d %H:%M:%S'):
+    current_time = int(time.time())
+    yesterday_timestamp = current_time - 60 * 60 * 24
+

@@ -8,3 +8,6 @@
 
 
 DRINK_MILK_ML_PREFIX = "baybay:record:milk:ml"
+
+REMIX_INFO_PREFIX = "zhihu-remix" # str
+REMIX_QUEUE_PREFIX = "zhihu-play-queue" # str
